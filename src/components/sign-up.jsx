@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import PageHeader from "./page-header";
+import PageHeader from "./common/page-header";
+import Inputs from "./common/inputs";
 
 class SignUp extends Component {
   state = {};
@@ -7,15 +8,14 @@ class SignUp extends Component {
     return (
       <div className="container">
         <div className="row">
-          <PageHeader title="Sign Up " />
+          <PageHeader
+            title="Sign Up "
+            desc=" Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum"
+          />
         </div>
         <div className="row">
-          <div className="col-12 text-center">
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum
-              dolorem eius quasi esse rerum necessitatibus, ipsam dicta
-              veritatis praesentium. Voluptate.
-            </p>
+          <div className="col-6 ">
+            <Inputs label="Email" name="email" error="* error" />
           </div>
         </div>
       </div>
