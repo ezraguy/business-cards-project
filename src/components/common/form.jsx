@@ -23,7 +23,8 @@ class Form extends Component {
     const errors = this.validateForm();
     this.setState({ errors: errors || {} });
     if (errors) return;
-    console.log("bla bla");
+    //code below runs if there are no errors
+    this.doSubmit();
   };
 
   //checks each input
@@ -52,7 +53,6 @@ class Form extends Component {
 
   renderInput(label, name, type = "text") {
     const { data, errors } = this.state;
-
     return (
       <Input
         onChange={this.handleChange}
