@@ -7,6 +7,10 @@ class Navbar extends Component {
     super(props);
     this.state = {};
   }
+
+  logOut() {
+    localStorage.removeItem("token");
+  }
   render() {
     return (
       <div>
@@ -39,17 +43,35 @@ class Navbar extends Component {
                 </a>
               </li>
             </ul>
-            <ul className="navbar-nav mך-auto">
-              <li className="nav-item">
-                <Link className="nav-link" to="/user/sign-in">
-                  Sign in
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/user/sign-up">
-                  Sign up
-                </Link>
-              </li>
+
+            <ul className="navbar-nav ">
+              {!this.props.user && (
+                <React.Fragment>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/user/sign-in">
+                      Sign in
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/user/sign-up">
+                      Sign up
+                    </Link>
+                  </li>
+                </React.Fragment>
+              )}
+              {this.props.user && (
+                <ul className="navbar-nav ">
+                  <li className="nav-item">
+                    <Link
+                      className="nav-link"
+                      to="/user/logOut"
+                      onClick={this.logOut}
+                    >
+                      Log Out
+                    </Link>
+                  </li>
+                </ul>
+              )}
             </ul>
           </div>
         </nav>

@@ -2,44 +2,41 @@ import React from "react";
 import PageHeader from "./common/page-header";
 import Form from "./common/form";
 import Joi from "joi-browser";
-import http from "../services/httpService";
-import { apiUrl } from "../config.json";
+import userService from "../services/userService";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-class SignUp extends Form {
-  state = {
-    data: { name: "", email: "", password: "" },
-    errors: {},
-  };
+class SignIn extends Form {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: { email: "", password: "" },
+      errors: {},
+    };
+  }
 
   schema = {
-    name: Joi.string().required().min(2).label("Name"),
     email: Joi.string().required().email().label("Email"),
     password: Joi.string().required().min(6).label("Password"),
   };
 
-  async doSubmit() {
-    const data = { ...this.state.data };
-
+  doSubmit = async () => {
+    const { email, password } = this.state.data;
     try {
-      //sending the users data
-      data.biz = false;
-      await http.post(`${apiUrl}/users`, data);
-      toast.success("you registered successfully!", { position: "top-center" });
-      this.props.history.replace("/user/sign-in");
+      await userService.login(email, password);
+      window.location = "/";
     } catch (err) {
-      if (err.respone && err.respone.status === 400) {
-        this.setState({ errors: { email: "email is not valid" } });
+      if (err.response && err.response.status === 400) {
+        this.setState({ errors: { email: err.response.data } });
+        toast.error(err.response.data);
       }
     }
-  }
+  };
 
   render() {
     return (
       <div className="container">
         <div className="row">
           <PageHeader
-            title="Sign Up"
+            title="Sign In"
             desc=" Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum"
           />
         </div>
@@ -52,10 +49,9 @@ class SignUp extends Form {
               className="mt-4"
               autoComplete="off"
             >
-              {this.renderInput("Your Name", "name")}
               {this.renderInput("Email", "email", "email")}
               {this.renderInput("Password", "password", "password")}
-              {this.renderButton("Sign Up", "submit", "btn btn-primary")}
+              {this.renderButton("Sign in", "submit", "btn btn-primary ")}
             </form>
           </div>
         </div>
@@ -64,4 +60,4 @@ class SignUp extends Form {
   }
 }
 
-export default SignUp;
+export default SignIn;
