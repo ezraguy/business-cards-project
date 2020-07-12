@@ -1,16 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
-
 class Navbar extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
-  logOut() {
-    localStorage.removeItem("token");
-  }
   render() {
     return (
       <div>
@@ -37,11 +33,14 @@ class Navbar extends Component {
                   About
                 </NavLink>
               </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  My Cards
-                </a>
-              </li>
+
+              {this.props.user && this.props.user.biz && (
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/my-cards">
+                    My cards
+                  </NavLink>
+                </li>
+              )}
             </ul>
 
             <ul className="navbar-nav ">
@@ -57,16 +56,17 @@ class Navbar extends Component {
                       Sign up
                     </Link>
                   </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/biz/sign-up">
+                      Business
+                    </Link>
+                  </li>
                 </React.Fragment>
               )}
               {this.props.user && (
                 <ul className="navbar-nav ">
                   <li className="nav-item">
-                    <Link
-                      className="nav-link"
-                      to="/user/logOut"
-                      onClick={this.logOut}
-                    >
+                    <Link className="nav-link" to="/user/logout">
                       Log Out
                     </Link>
                   </li>

@@ -10,14 +10,16 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SignIn from './components/sign-in';
 import userService from "./services/userService";
-
+import Logout from './components/logout';
+import BizSignup from './components/biz-signup';
+import CreateCard from './components/create-card';
+import ProtectedRoute from "./components/common/protected-route";
+import MyCards from './components/my-cards';
 class App extends Component {
   state = {}
 
-
-
   componentDidMount = () => {
-    const user = userService.getCurrenntUser();
+    const user = userService.getCurrentUser();
     this.setState({ user })
   }
   render() {
@@ -31,10 +33,14 @@ class App extends Component {
 
         <main>
           <Switch>
+            <ProtectedRoute path='/create-card' component={CreateCard} biz={true} />
+            <ProtectedRoute path='/my-cards' component={MyCards} biz={true} />
+            <Route path="/user/logout" component={Logout} />
+            <Route path="/user/sign-in" exact component={SignIn} />
+            <Route path="/user/sign-up" exact component={SignUp} />
+            <Route path="/biz/sign-up" exact component={BizSignup} />
             <Route path="/about" component={About} />
             <Route path="/" exact component={Home} />
-            <Route path="/user/sign-up" exact component={SignUp} />
-            <Route path="/user/sign-in" exact component={SignIn} />
           </Switch>
         </main>
 

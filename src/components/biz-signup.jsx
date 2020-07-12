@@ -2,49 +2,49 @@ import React from "react";
 import PageHeader from "./common/page-header";
 import Form from "./common/form";
 import Joi from "joi-browser";
+import http from "../services/httpService";
 import userService from "../services/userService";
-import { toast } from "react-toastify";
+import { apiUrl } from "../config.json";
 import { Redirect } from "react-router-dom";
-class SignIn extends Form {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: { email: "", password: "" },
-      errors: {},
-    };
-  }
+import { toast } from "react-toastify";
+
+class BizSignup extends Form {
+  state = {
+    data: { name: "", email: "", password: "" },
+    errors: {},
+  };
 
   schema = {
+    name: Joi.string().required().min(2).label("Name"),
     email: Joi.string().required().email().label("Email"),
     password: Joi.string().required().min(6).label("Password"),
   };
 
   doSubmit = async () => {
-    const { email, password } = this.state.data;
+    const data = { ...this.state.data };
     try {
-      await userService.login(email, password);
-      window.location = "/";
+      data.biz = true;
+      await http.post(`${apiUrl}/users`, data);
+      //logging the bussines user here
+      await userService.login(data.email, data.password);
+      window.location = "/create-card";
     } catch (err) {
       if (err.response && err.response.status === 400) {
-        this.setState({ errors: { email: err.response.data } });
+        this.setState({ errors: { email: "email is not valid" } });
         toast.error(err.response.data);
       }
     }
   };
-
   render() {
-    //if the user is already signed in and tryies to go the sign in it will redirect to the home page
     if (userService.getCurrentUser()) return <Redirect to="/" />;
     return (
       <div className="container">
+        <PageHeader
+          title="Business Sign-Up Page"
+          desc="Open a new business account for free!"
+        />
         <div className="row">
-          <PageHeader
-            title="Sign In"
-            desc=" Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum"
-          />
-        </div>
-        <div className="row">
-          <div className="col-lg-6 mx-auto">
+          <div className="col-lg-6 m-auto">
             <form
               onSubmit={this.handleSubmit}
               action=""
@@ -52,9 +52,10 @@ class SignIn extends Form {
               className="mt-4"
               autoComplete="off"
             >
+              {this.renderInput("Your business Name", "name")}
               {this.renderInput("Email", "email", "email")}
               {this.renderInput("Password", "password", "password")}
-              {this.renderButton("Sign in", "submit", "btn btn-primary ")}
+              {this.renderButton("Next", "", "btn btn-primary")}
             </form>
           </div>
         </div>
@@ -63,4 +64,4 @@ class SignIn extends Form {
   }
 }
 
-export default SignIn;
+export default BizSignup;

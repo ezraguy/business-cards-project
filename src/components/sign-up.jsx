@@ -6,6 +6,9 @@ import http from "../services/httpService";
 import { apiUrl } from "../config.json";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import userService from "../services/userService";
+import { Redirect } from "react-router-dom";
+
 class SignUp extends Form {
   state = {
     data: { name: "", email: "", password: "" },
@@ -28,13 +31,15 @@ class SignUp extends Form {
       toast.success("you registered successfully!", { position: "top-center" });
       this.props.history.replace("/user/sign-in");
     } catch (err) {
-      if (err.respone && err.respone.status === 400) {
-        this.setState({ errors: { email: "email is not valid" } });
+      if (err.response && err.response.status === 400) {
+        toast.error(err.response.data);
       }
     }
   }
 
   render() {
+    //if the user is already signed in and tryies to go the sign up it will redirect to the home page
+    if (userService.getCurrentUser()) return <Redirect to="/" />;
     return (
       <div className="container">
         <div className="row">
