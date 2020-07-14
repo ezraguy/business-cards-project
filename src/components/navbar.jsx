@@ -35,11 +35,19 @@ class Navbar extends Component {
               </li>
 
               {this.props.user && this.props.user.biz && (
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/my-cards">
-                    My cards
-                  </NavLink>
-                </li>
+                <React.Fragment>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/my-cards">
+                      My cards
+                    </NavLink>
+                  </li>
+                  <li>
+                    {" "}
+                    <NavLink className="nav-link" to="/create-card">
+                      Add a card
+                    </NavLink>
+                  </li>
+                </React.Fragment>
               )}
             </ul>
 

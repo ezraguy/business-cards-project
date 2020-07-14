@@ -5,9 +5,10 @@ import Joi from "joi-browser";
 import cardService from "../services/cardService";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-class CreateCard extends Form {
+class EditCard extends Form {
   state = {
     data: {
+      _id: "",
       bizName: "",
       bizDescription: "",
       bizAddress: "",
@@ -18,6 +19,7 @@ class CreateCard extends Form {
   };
 
   schema = {
+    _id: Joi.string(),
     bizName: Joi.string().min(2).max(255).required(),
     bizDescription: Joi.string().min(2).max(1024).required(),
     bizAddress: Joi.string().min(2).max(400).required(),
@@ -33,19 +35,25 @@ class CreateCard extends Form {
     const data = { ...this.state.data };
     //if the users did not enter a url so we delete the field bizimage so the default image can be shown
     if (!data.bizImage) delete data.bizImage;
-
-    await cardService.createCard(data);
-    toast.success("Card has been created!");
+    await cardService.editCard(data);
+    toast.success("Card has been Updated!");
     this.props.history.replace("/my-cards");
+  };
+
+  componentDidMount = async () => {
+    const cardId = this.props.match.params.id;
+    const { data } = await cardService.getCard(cardId);
+    //delting the the fileds that dont match the scheme (that we got from mongo)
+    delete data.__v;
+    delete data.user_id;
+    delete data.bizNumber;
+    this.setState({ data });
   };
 
   render() {
     return (
       <div className="container">
-        <PageHeader
-          title="Create a new card"
-          desc="Create a card for your business!"
-        />
+        <PageHeader title="Edit Card" />
         <div className="row">
           <div className="col-lg-6 mx-auto">
             <form
@@ -60,7 +68,7 @@ class CreateCard extends Form {
               {this.renderInput("Bussniess Address", "bizAddress")}
               {this.renderInput("Bussniess Phone", "bizPhone", "tel")}
               {this.renderInput("Bussniess image (URL)", "bizImage")}
-              {this.renderButton("Create Card", "submit", "btn btn-primary ")}
+              {this.renderButton("Update Card", "submit", "btn btn-primary ")}
               <Link to="/my-cards" className="btn btn-secondary ml-2">
                 cancel
               </Link>
@@ -72,4 +80,4 @@ class CreateCard extends Form {
   }
 }
 
-export default CreateCard;
+export default EditCard;

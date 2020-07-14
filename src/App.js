@@ -15,6 +15,8 @@ import BizSignup from './components/biz-signup';
 import CreateCard from './components/create-card';
 import ProtectedRoute from "./components/common/protected-route";
 import MyCards from './components/my-cards';
+import EditCard from './components/edit-card';
+import DeleteCard from './components/delete-card';
 class App extends Component {
   state = {}
 
@@ -33,6 +35,8 @@ class App extends Component {
 
         <main>
           <Switch>
+            <ProtectedRoute path='/my-cards/edit/:id' component={EditCard} biz={true} />
+            <ProtectedRoute path='/my-cards/delete/:id' component={DeleteCard} biz={true} />
             <ProtectedRoute path='/create-card' component={CreateCard} biz={true} />
             <ProtectedRoute path='/my-cards' component={MyCards} biz={true} />
             <Route path="/user/logout" component={Logout} />
